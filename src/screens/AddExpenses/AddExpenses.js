@@ -1,22 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { TextInput, Menu, Button, Provider, Portal, Card } from 'react-native-paper';
+import instance from '../../service/Axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Form = () => {
+const AddExpenses = () => {
+  const [id,setId]=useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('');
   const [visible, setVisible] = useState(false);
 
-  // Category options
-  const categories = ['Food', 'Education', 'Transport', 'Other', 'Entertainment'];
 
-  const handleSubmit = () => {
-    if (!amount || !category) {
-      alert('Please fill out both fields');
-    } else {
-      alert(`Amount: ${amount}, Category: ${category}`);
+useEffect(() => {
+ const idUser = AsyncStorage.getItem('id');
+ setId(idUser);
+
+ Submit();
+
+}, [])
+
+  const Submit = () => {
+    const data={
+      userId:id,
+      category:category,
+      amount:amount
     }
+    instance.post('/api/v1/expens/add',data)
+    .then((res)=>{
+      console.log(res);
+      
+    })
+    .catch((err)=>{
+      console.log(err);
+      
+    })
   };
+
+
+  const categories = ['Food', 'Education', 'Transport', 'Other', 'Entertainment'];
 
   return (
     <Provider>
@@ -61,7 +82,7 @@ const Form = () => {
         </Portal>
 
         {/* Submit Button */}
-        <Button mode="contained" onPress={handleSubmit} style={styles.submitButton}>
+        <Button mode="contained" onPress={Submit} style={styles.submitButton}>
           Submit
         </Button>
       </View>
@@ -97,4 +118,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Form;
+export default AddExpenses;

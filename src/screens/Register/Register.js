@@ -3,6 +3,8 @@ import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
 
 export default function Register({ navigation }) {
+
+  
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>

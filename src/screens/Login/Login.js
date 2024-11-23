@@ -1,38 +1,33 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { TextInput, Button, Text } from 'react-native-paper';
 import instance from '../../service/Axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Login({ navigation }) {
+export default function Login() {
+  const navigation=useNavigation();
 
-    const [email, setEmail] = useState();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-    const [password, setPassword] = useState();
+    const loginPage = async () => {
+        const data = { email, password };
 
+        try {
+            const res = await instance.post('/api/v1/user/login', data);
+            const token = res.data.token;
+            const id = res.data.userId.toString();
 
-
-    const loginPage = () => {
-
-       
-
-
-            instance('/api/v1/user/login', data)
-                .then((res) => {
-                    console.log(res);
-
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-
-        
-
-
-
-
-    }
+            await AsyncStorage.setItem('expens', token);
+            await AsyncStorage.setItem('id', id);
+            console.log('login sucess..!');
+            
+            navigation.navigate('BottomTab');
+        } catch (err) {
+            console.log(err.response?.data || err.message);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -43,16 +38,16 @@ export default function Login({ navigation }) {
                 style={styles.input}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                onChangeText={(text) => setEmail(text)}
             />
             <TextInput
                 label="Password"
                 mode="outlined"
                 style={styles.input}
                 secureTextEntry
+                onChangeText={(text) => setPassword(text)}
             />
-            <Button mode="contained" style={styles.button}
-                onPress={loginPage}
-            >
+            <Button mode="contained" style={styles.button} onPress={loginPage}>
                 Login
             </Button>
 
@@ -61,10 +56,6 @@ export default function Login({ navigation }) {
                     Not registered? Go to Register
                 </Text>
             </TouchableOpacity>
-
-
-
-
         </View>
     );
 }
@@ -86,7 +77,6 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 10,
-
     },
     registerPrompt: {
         marginTop: 15,
