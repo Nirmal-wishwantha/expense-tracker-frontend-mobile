@@ -8,12 +8,13 @@ export default function ViewTable() {
     const [getExpense, setGetExpense] = useState([]);
     const [loading, setLoading] = useState(true);
 
+
     useEffect(() => {
         const fetchExpenses = async () => {
             try {
-                const userId = await AsyncStorage.getItem('id'); // Retrieve user ID from AsyncStorage
+                const userId = await AsyncStorage.getItem('id');
                 if (userId) {
-                    getAll(userId); // Pass the user ID to the getAll method
+                    getAll(userId);
                 } else {
                     console.error('User ID not found in AsyncStorage');
                     setLoading(false);
@@ -29,7 +30,7 @@ export default function ViewTable() {
 
     const getAll = (userId) => {
         instance
-            .get(`/api/v1/expens/get/${userId}`) // Use the correct userId passed as an argument
+            .get(`/api/v1/expens/get/${userId}`)
             .then((res) => {
                 setGetExpense(res.data);
                 setLoading(false);

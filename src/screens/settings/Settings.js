@@ -6,7 +6,7 @@ import { Button } from 'react-native-paper';
 import ViewTable from '../common/table/ViewTable';
 
 export default function Settings() {
-    const navigation = useNavigation();
+    const Navigation = useNavigation();
 
     const logOut = async () => {
         try {
@@ -16,7 +16,7 @@ export default function Settings() {
             console.log('User logged out and data removed from AsyncStorage');
 
 
-            navigation.navigate('Login');
+            Navigation.navigate('Login');
         } catch (error) {
             console.error('Error removing data from AsyncStorage:', error);
         }
